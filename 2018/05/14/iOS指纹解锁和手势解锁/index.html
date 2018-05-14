@@ -521,6 +521,23 @@ height:50vh;
 <p>到这里就实现了<code>手势解锁</code>的所有逻辑，在实现之前还在担心有什么问题，结果实现出来之后感觉其实很简单。</p>
 <hr>
 <h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>希望这篇文章能够帮助到一些人。对于<code>代码</code>和<code>博客</code>的一些<code>规范</code>希望大家谅解一下了，后面也会慢慢去优化的。最后的最后附上Demo的链接 <strong><a href="https://github.com/yinxing29/YZXUnlock" target="_blank" rel="noopener">Demo-GitHub</a></strong>。</p>
+<p><div id="container"></div></p>
+<p><link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css"></p>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: 'location.href', // 可选。默认为 location.href
+  owner: 'yinxing29',  //改你自己的名字
+  repo: ' ',  //专门储存评论一个GitHub仓库
+  oauth: {
+    client_id: '3d0471920900c002ea9e', //改为你自己的，下同
+    client_secret: 'c1ca98a130c157a8261e3db938deb692523d1eb2', 
+  },
+})
+gitment.render('container')
+</script>
+
+
 
     </article>
     <!-- license  -->
