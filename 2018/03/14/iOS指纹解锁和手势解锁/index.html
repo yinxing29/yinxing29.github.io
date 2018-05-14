@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="yinxing29'blog">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="yinxing29'blog">
+    <meta name="keywords" content="yinxing29'blog | yinxing29'blog">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>yinxing29&#39;blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180501 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180501 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+        
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/favicon.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />    
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >yinxing29&#39;blog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name"></a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>yinxing29'blog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/post-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            [Untitled Post]
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <!-- 文章页标签  -->
+            
+            <div class="post-intro-meta">
+                <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                <span class="post-intro-time">2018/03/14</span>
+                
+                <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                    <span class="iconfont-archer">&#xe602;</span>
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+                
+                <span class="shareWrapper">
+                    <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                    <span class="shareText">Share</span>
+                    <ul class="shareList">
+                        <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                            <div class="share-qrcode"></div>
+                        </li>
+                        <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                        <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                        <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                        <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                    </ul>
+                </span>
+            </div>
+        
+    </div>
+</div>
+        <script>
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+  
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntroTags = document.getElementsByClassName('post-intro-tags')[0],
+        postIntroMeat = document.getElementsByClassName('post-intro-meta')[0];
+      if (postIntroTags) {
+        postIntroTags.classList.add('post-fade-in');
+      }
+      if (postIntroMeat) {
+        postIntroMeat.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="iOS指纹解锁和手势解锁"><a href="#iOS指纹解锁和手势解锁" class="headerlink" title="iOS指纹解锁和手势解锁"></a>iOS指纹解锁和手势解锁</h1><p>[TOC]</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>一直想写博客来着，一来可以记录一些自己学习和研究的东西，二来也可以将自己写的一些东西分享出去，给他人参考，还可能收到他人的一些建议，从而完善自己的项目和提升自己的技术，这也是一种很好的技术交流方式。但是之前一直不知道怎么去写？怎么去总结？在经过一些观摩和学习后，终于决定先来试试水了😂。下面正式开始我的第一篇博客。</p>
+<blockquote>
+<p>这篇博客是自己基于<code>iOS</code>系统实现的指纹解锁（系统API）和手势解锁（CAShapeLayer）功能。</p>
+</blockquote>
+<blockquote>
+<p>在之前自学<code>CAAnimation</code>，再加上公司老大说可以预研（之前没有做过）一下各种解锁方式的情况下，想着自己来实现一下现在常用的解锁方式：<code>指纹解锁</code>和<code>手势解锁</code>。</p>
+</blockquote>
+<h2 id="指纹解锁"><a href="#指纹解锁" class="headerlink" title="指纹解锁"></a>指纹解锁</h2><p>基于iOS的指纹解锁其实很简单，因为系统已经提供了<code>API</code>给你，你只需要做一些简单的判断和适时的调用就可以了。</p>
+<h3 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h3><p>首先导入头文件<code>#import &lt;LocalAuthentication/LocalAuthentication.h&gt;</code> </p>
+<p>判断是否开启了TouchID，如果已经开启，直接校验指纹，如果未开启，则需要先开启TouchID</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//判断是否开启了TouchID</span></span><br><span class="line">[[[NSUserDefaults standardUserDefaults] objectForKey:@<span class="string">"OpenTouchID"</span>] boolValue]</span><br></pre></td></tr></table></figure>
+<h3 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h3><ul>
+<li>未开启TouchID，询问是否开启</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)p_openTouchID</span><br><span class="line">&#123;</span><br><span class="line">    dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@<span class="string">"温馨提示"</span> message:@<span class="string">"是否开启TouchID?"</span> preferredStyle:UIAlertControllerStyleAlert];</span><br><span class="line">        [alertController addAction:[UIAlertAction actionWithTitle:@<span class="string">"YES"</span> style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) &#123;</span><br><span class="line">            <span class="comment">//开启TouchID</span></span><br><span class="line">            [[NSUserDefaults standardUserDefaults] setObject:@(YES) forKey:@<span class="string">"OpenTouchID"</span>];</span><br><span class="line">            [[NSNotificationCenter defaultCenter] postNotificationName:@<span class="string">"OpenTouchIDSuccess"</span> object:nil userInfo:nil];</span><br><span class="line">        &#125;]];</span><br><span class="line">        [alertController addAction:[UIAlertAction actionWithTitle:@<span class="string">"NO"</span> style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) &#123;</span><br><span class="line">            <span class="comment">//不开启TouchID</span></span><br><span class="line">            [[NSUserDefaults standardUserDefaults] setObject:@(NO) forKey:@<span class="string">"OpenTouchID"</span>];</span><br><span class="line">            [[NSNotificationCenter defaultCenter] postNotificationName:@<span class="string">"OpenTouchIDSuccess"</span> object:nil userInfo:nil];</span><br><span class="line">        &#125;]];</span><br><span class="line">        [self presentViewController:alertController animated:YES completion:nil];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>已开启TouchID</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)p_touchID</span><br><span class="line">&#123;</span><br><span class="line">    dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        LAContext *context = [[LAContext alloc] init];</span><br><span class="line">        NSError *error = nil;</span><br><span class="line">        <span class="comment">//判断是否支持TouchID</span></span><br><span class="line">        <span class="keyword">if</span> ([context canEvaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics error:&amp;error]) &#123;</span><br><span class="line">            [context evaluatePolicy:LAPolicyDeviceOwnerAuthenticationWithBiometrics localizedReason:@<span class="string">"TouchID Text"</span> reply:^(BOOL success, NSError * _Nullable error) &#123;</span><br><span class="line">                <span class="keyword">if</span> (success) &#123;<span class="comment">//指纹验证成功</span></span><br><span class="line">                    [[NSNotificationCenter defaultCenter] postNotificationName:@<span class="string">"UnlockLoginSuccess"</span> object:nil];</span><br><span class="line">                &#125;<span class="keyword">else</span> &#123;<span class="comment">//指纹验证失败</span></span><br><span class="line">                    <span class="keyword">switch</span> (error.code)</span><br><span class="line">                    &#123;</span><br><span class="line">                        <span class="keyword">case</span> LAErrorAuthenticationFailed:</span><br><span class="line">                        &#123;</span><br><span class="line">                            NSLog(@<span class="string">"授权失败"</span>); <span class="comment">// -1 连续三次指纹识别错误</span></span><br><span class="line">                            [[NSNotificationCenter defaultCenter] postNotificationName:@<span class="string">"touchIDFailed"</span> object:nil];</span><br><span class="line">                        &#125;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        <span class="keyword">case</span> LAErrorUserCancel:</span><br><span class="line">                        &#123;</span><br><span class="line">                            NSLog(@<span class="string">"用户取消验证Touch ID"</span>); <span class="comment">// -2 在TouchID对话框中点击了取消按钮</span></span><br><span class="line">                            [self dismissViewControllerAnimated:YES completion:nil];</span><br><span class="line">                        &#125;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        <span class="keyword">case</span> LAErrorUserFallback:</span><br><span class="line">                        &#123;</span><br><span class="line">                            [[NSOperationQueue mainQueue] addOperationWithBlock:^&#123;</span><br><span class="line">                                [[NSNotificationCenter defaultCenter] postNotificationName:@<span class="string">"touchIDFailed"</span> object:nil];</span><br><span class="line">                                NSLog(@<span class="string">"用户选择输入密码，切换主线程处理"</span>); <span class="comment">// -3 在TouchID对话框中点击了输入密码按钮</span></span><br><span class="line">                            &#125;];</span><br><span class="line">                            </span><br><span class="line">                        &#125;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        <span class="keyword">case</span> LAErrorSystemCancel:</span><br><span class="line">                        &#123;</span><br><span class="line">                            NSLog(@<span class="string">"取消授权，如其他应用切入，用户自主"</span>); <span class="comment">// -4 TouchID对话框被系统取消，例如按下Home或者电源键</span></span><br><span class="line">                        &#125;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        <span class="keyword">case</span> LAErrorPasscodeNotSet:</span><br><span class="line">                            </span><br><span class="line">                        &#123;</span><br><span class="line">                            NSLog(@<span class="string">"设备系统未设置密码"</span>); <span class="comment">// -5</span></span><br><span class="line">                        &#125;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        <span class="keyword">case</span> LAErrorBiometryNotAvailable:</span><br><span class="line">                        &#123;</span><br><span class="line">                            NSLog(@<span class="string">"设备未设置Touch ID"</span>); <span class="comment">// -6</span></span><br><span class="line">                        &#125;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        <span class="keyword">case</span> LAErrorBiometryNotEnrolled: <span class="comment">// Authentication could not start, because Touch ID has no enrolled fingers</span></span><br><span class="line">                        &#123;</span><br><span class="line">                            NSLog(@<span class="string">"用户未录入指纹"</span>); <span class="comment">// -7</span></span><br><span class="line">                        &#125;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                            </span><br><span class="line">#if __IPHONE_OS_VERSION_MAX_ALLOWED &gt;= __IPHONE_9_0</span><br><span class="line">                        <span class="keyword">case</span> LAErrorBiometryLockout: <span class="comment">//Authentication was not successful, because there were too many failed Touch ID attempts and Touch ID is now locked. Passcode is required to unlock Touch ID, e.g. evaluating LAPolicyDeviceOwnerAuthenticationWithBiometrics will ask for passcode as a prerequisite 用户连续多次进行Touch ID验证失败，Touch ID被锁，需要用户输入密码解锁，先Touch ID验证密码</span></span><br><span class="line">                        &#123;</span><br><span class="line">                            NSLog(@<span class="string">"Touch ID被锁，需要用户输入密码解锁"</span>); <span class="comment">// -8 连续五次指纹识别错误，TouchID功能被锁定，下一次需要输入系统密码</span></span><br><span class="line">                        &#125;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        <span class="keyword">case</span> LAErrorAppCancel:</span><br><span class="line">                        &#123;</span><br><span class="line">                            NSLog(@<span class="string">"用户不能控制情况下APP被挂起"</span>); <span class="comment">// -9</span></span><br><span class="line">                        &#125;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        <span class="keyword">case</span> LAErrorInvalidContext:</span><br><span class="line">                        &#123;</span><br><span class="line">                            NSLog(@<span class="string">"LAContext传递给这个调用之前已经失效"</span>); <span class="comment">// -10</span></span><br><span class="line">                        &#125;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">#else</span><br><span class="line">#endif</span><br><span class="line">                        <span class="keyword">default</span>:</span><br><span class="line">                        &#123;</span><br><span class="line">                            [[NSOperationQueue mainQueue] addOperationWithBlock:^&#123;</span><br><span class="line">                                NSLog(@<span class="string">"其他情况，切换主线程处理"</span>);</span><br><span class="line">                            &#125;];</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;];</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//不支持</span></span><br><span class="line">            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@<span class="string">"温馨提示"</span> message:@<span class="string">"该设备不支持TouchID"</span> preferredStyle:UIAlertControllerStyleAlert];</span><br><span class="line">            [alertController addAction:[UIAlertAction actionWithTitle:@<span class="string">"完成"</span> style:UIAlertActionStyleCancel handler:nil]];</span><br><span class="line">            [self presentViewController:alertController animated:YES completion:nil];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>注</strong>：代码中的<code>NSNotificationCenter</code>用于不同操作后的界面跳转，重新设置<code>window.rootViewController</code>,可忽略。</p>
+<p>到这里<code>指纹解锁</code>就结束了，很简单的一个<code>API</code>调用。</p>
+<hr>
+<h2 id="手势解锁"><a href="#手势解锁" class="headerlink" title="手势解锁"></a>手势解锁</h2><p>其实在之前还没有接触和刚开始接触iOS开发的时候，觉得手势解锁很难，完全不知道怎么去实现？但是当我在自学CAAnimation的时候，脑海中突然就想到了一个实现手势解锁的方案，下面就开始介绍我的实现方法：</p>
+<h3 id="构思"><a href="#构思" class="headerlink" title="构思"></a>构思</h3><ol>
+<li><p>手势解锁是怎么去验证你滑动的手势是正确的？</p>
+<p> <code>其实手势解锁和输入密码的验证是一样的，在你画UI的时候，你可以给每一个*圆点*一个id，在你设置手势的时候，将滑动到对应*圆点*的id放入一个有序集合中，并保存起来，然后验证登录的时候，用另外一个有序集合记录你当前滑动到的*圆点*id，然后和之前保存在本地的进行对比，就可以达到验证的目的了</code></p>
+</li>
+<li><p>用什么方式去具体实现UI？</p>
+<p> <code>在之前想过几种实现方式，但是都被pass掉了，直到自学CAAnimation的时候，才突然意识到有一个很好的实现方式----CAShapeLayer</code></p>
+</li>
+</ol>
+<p>其实，当你有了这两个问题的答案的时候，你的手势解锁就已经实现了一大部分，后面的部分就是敲代码了。</p>
+<h3 id="实现-（工程代码见文末链接）"><a href="#实现-（工程代码见文末链接）" class="headerlink" title="实现 （工程代码见文末链接）"></a>实现 <strong>（工程代码见文末链接）</strong></h3><blockquote>
+<p>先上几张效果图：（由于本人艺术细胞有限，所以为了好看点，界面的UI是参照QQ安全中心的手势解锁）</p>
+</blockquote>
+<p><img src="https://user-gold-cdn.xitu.io/2018/3/15/162279e0de57f2b4?w=621&amp;h=367&amp;f=png&amp;s=133661" alt="设置手势"></p>
+<blockquote>
+<p>目录结构</p>
+</blockquote>
+<p><img src="https://user-gold-cdn.xitu.io/2018/3/14/16223ad2f52615f3?w=223&amp;h=163&amp;f=png&amp;s=22874" alt="手势解锁目录结构"></p>
+<ul>
+<li><code>GesturesViewController</code>：这个<code>controller</code>用于展示<code>UI</code>，你可以替换成自己<code>controller</code>,</li>
+<li><code>GesturesView</code>：用于<code>圆点</code>按钮的初始化和布局,</li>
+<li><code>PointView</code>：<code>圆点</code>手势按钮。</li>
+</ul>
+<p>这里主要介绍一下GesturesView和PointView，主要逻辑也都在这两个类中：</p>
+<p><strong>PointView</strong>(主要是界面UI，不多介绍，直接上代码)</p>
+<blockquote>
+<p>PointView.h</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">- (instancetype)initWithFrame:(CGRect)frame</span><br><span class="line">                       withID:(NSString *)ID;</span><br><span class="line"></span><br><span class="line">@property (nonatomic, copy, readonly) NSString             *ID;</span><br><span class="line"></span><br><span class="line"><span class="comment">//选中</span></span><br><span class="line">@property (nonatomic, assign) BOOL             isSelected;</span><br><span class="line"><span class="comment">//解锁失败</span></span><br><span class="line">@property (nonatomic, assign) BOOL             isError;</span><br><span class="line"><span class="comment">//解锁成功</span></span><br><span class="line">@property (nonatomic, assign) BOOL             isSuccess;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><code>-initWithFrame:withID:</code>传入<code>frame</code>和<code>ID</code>，用于初始化<code>PointView</code>，</p>
+</li>
+<li><p><code>ID:</code>只读，用于外部获取<code>ID</code>，</p>
+</li>
+<li><p><code>isSelected,isError,isSuccess:</code>用于判断PointView的状态以显示不同的UI。</p>
+</li>
+</ul>
+<blockquote>
+<p>PointView.m</p>
+</blockquote>
+<p>通过懒加载初始化三个CAShapeLayer</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">#pragma mark - 懒加载</span><br><span class="line"><span class="comment">//外层手势按钮</span></span><br><span class="line">- (CAShapeLayer *)contentLayer</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!_contentLayer) &#123;</span><br><span class="line">        _contentLayer = [CAShapeLayer layer];</span><br><span class="line">        UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(<span class="number">2.0</span>, <span class="number">2.0</span>, SELF_WIDTH - <span class="number">4.0</span>, SELF_HEIGHT - <span class="number">4.0</span>) cornerRadius:(SELF_WIDTH - <span class="number">4.0</span>) / <span class="number">2.0</span>];</span><br><span class="line">        _contentLayer.path = path.CGPath;</span><br><span class="line">        _contentLayer.fillColor = RGBCOLOR(<span class="number">46.0</span>, <span class="number">47.0</span>, <span class="number">50.0</span>).CGColor;</span><br><span class="line">        _contentLayer.strokeColor = RGBCOLOR(<span class="number">26.0</span>, <span class="number">27.0</span>, <span class="number">29.0</span>).CGColor;</span><br><span class="line">        _contentLayer.strokeStart = <span class="number">0</span>;</span><br><span class="line">        _contentLayer.strokeEnd = <span class="number">1</span>;</span><br><span class="line">        _contentLayer.lineWidth = <span class="number">2</span>;</span><br><span class="line">        _contentLayer.cornerRadius = self.bounds.size.width / <span class="number">2.0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> _contentLayer;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//手势按钮边框</span></span><br><span class="line">- (CAShapeLayer *)borderLayer</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!_borderLayer) &#123;</span><br><span class="line">        _borderLayer = [CAShapeLayer layer];</span><br><span class="line">        UIBezierPath *borderPath = [UIBezierPath bezierPathWithArcCenter:CGPointMake(SELF_WIDTH / <span class="number">2.0</span>, SELF_HEIGHT / <span class="number">2.0</span>) radius:SELF_WIDTH / <span class="number">2.0</span> startAngle:<span class="number">0</span> endAngle:<span class="number">2</span> * M_PI clockwise:NO];</span><br><span class="line">        _borderLayer.strokeColor = RGBCOLOR(<span class="number">105.0</span>, <span class="number">108.0</span>, <span class="number">111.0</span>).CGColor;</span><br><span class="line">        _borderLayer.fillColor = [UIColor clearColor].CGColor;</span><br><span class="line">        _borderLayer.strokeEnd = <span class="number">1</span>;</span><br><span class="line">        _borderLayer.strokeStart = <span class="number">0</span>;</span><br><span class="line">        _borderLayer.lineWidth = <span class="number">2</span>;</span><br><span class="line">        _borderLayer.path = borderPath.CGPath;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> _borderLayer;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//选中时，中间样式</span></span><br><span class="line">- (CAShapeLayer *)centerLayer</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (!_centerLayer) &#123;</span><br><span class="line">        _centerLayer = [CAShapeLayer layer];</span><br><span class="line">        UIBezierPath *centerPath = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(SELF_WIDTH / <span class="number">2.0</span> - (SELF_WIDTH - <span class="number">4.0</span>) / <span class="number">4.0</span>, SELF_HEIGHT / <span class="number">2.0</span> - (SELF_HEIGHT - <span class="number">4.0</span>) / <span class="number">4.0</span>, (SELF_WIDTH - <span class="number">4.0</span>) / <span class="number">2.0</span>, (SELF_WIDTH - <span class="number">4.0</span>) / <span class="number">2.0</span>) cornerRadius:(SELF_WIDTH - <span class="number">4.0</span>) / <span class="number">4.0</span>];</span><br><span class="line">        _centerLayer.path = centerPath.CGPath;</span><br><span class="line">        _centerLayer.lineWidth = <span class="number">3</span>;</span><br><span class="line">        _centerLayer.strokeColor = [UIColor colorWithWhite:<span class="number">0</span> alpha:<span class="number">0.7</span>].CGColor;</span><br><span class="line">        _centerLayer.fillColor = RGBCOLOR(<span class="number">30.0</span>, <span class="number">180.0</span>, <span class="number">244.0</span>).CGColor;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> _centerLayer;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>设置PointView的UI状态</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//根据情况显示三种状态</span></span><br><span class="line">- (<span class="keyword">void</span>)setIsSuccess:(BOOL)isSuccess</span><br><span class="line">&#123;</span><br><span class="line">    _isSuccess = isSuccess;</span><br><span class="line">    <span class="keyword">if</span> (_isSuccess) &#123;</span><br><span class="line">        self.centerLayer.fillColor = RGBCOLOR(<span class="number">43.0</span>, <span class="number">210.0</span>, <span class="number">110.0</span>).CGColor;</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        self.centerLayer.fillColor = RGBCOLOR(<span class="number">30.0</span>, <span class="number">180.0</span>, <span class="number">244.0</span>).CGColor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)setIsSelected:(BOOL)isSelected</span><br><span class="line">&#123;</span><br><span class="line">    _isSelected = isSelected;</span><br><span class="line">    <span class="keyword">if</span> (_isSelected) &#123;</span><br><span class="line">        self.centerLayer.hidden = NO;</span><br><span class="line">        self.borderLayer.strokeColor = RGBCOLOR(<span class="number">30.0</span>, <span class="number">180.0</span>, <span class="number">244.0</span>).CGColor;</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        self.centerLayer.hidden = YES;</span><br><span class="line">        self.borderLayer.strokeColor = RGBCOLOR(<span class="number">105.0</span>, <span class="number">108.0</span>, <span class="number">111.0</span>).CGColor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)setIsError:(BOOL)isError</span><br><span class="line">&#123;</span><br><span class="line">    _isError = isError;</span><br><span class="line">    <span class="keyword">if</span> (_isError) &#123;</span><br><span class="line">        self.centerLayer.fillColor = RGBCOLOR(<span class="number">222.0</span>, <span class="number">64.0</span>, <span class="number">60.0</span>).CGColor;</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">        self.centerLayer.fillColor = RGBCOLOR(<span class="number">30.0</span>, <span class="number">180.0</span>, <span class="number">244.0</span>).CGColor;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>GesturesView</strong>（基本所有的逻辑都在这个里面了）</p>
+<blockquote>
+<p>GesturesView.h</p>
+</blockquote>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//回传选择的id</span></span><br><span class="line">typedef <span class="keyword">void</span> (^GestureBlock)(NSArray *selectedID);</span><br><span class="line"><span class="comment">//回传手势验证结果</span></span><br><span class="line">typedef <span class="keyword">void</span> (^UnlockBlock)(BOOL isSuccess);</span><br><span class="line"><span class="comment">//设置手势失败</span></span><br><span class="line">typedef <span class="keyword">void</span> (^SettingBlock)(<span class="keyword">void</span>);</span><br><span class="line"></span><br><span class="line">@interface GesturesView : UIView</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> 设置密码时，返回设置的手势密码</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">@property (nonatomic, copy) GestureBlock             gestureBlock;</span><br><span class="line">                             </span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> 返回解锁成功还是失败状态</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">@property (nonatomic, copy) UnlockBlock            unlockBlock;</span><br><span class="line">                             </span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> 判断手势密码时候设置成功（手势密码不得少于四个点）</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">@property (nonatomic, copy) SettingBlock           settingBlock;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> 判断是设置手势还是手势解锁</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line">@property (nonatomic, assign) BOOL         settingGesture;</span><br></pre></td></tr></table></figure>
+<p>这里我申明了三个block：</p>
+<ul>
+<li><code>GestureBlock：</code>将选择的ID有序集合回传给控制器，</li>
+<li><code>UnlockBlock：</code>回传手势验证结果，</li>
+<li><code>SettingBlcok：</code>设置手势失败</li>
+</ul>
+<p>属性：</p>
+<ul>
+<li><code>gestureBlock,unlockBlock,settingBlock:</code>分别是对应block的实例，</li>
+<li><code>settingGesture:</code>用于判断是设置手势还是手势解锁</li>
+</ul>
+<blockquote>
+<p>GesturesView.h <strong>（最主要的逻辑实现部分）</strong></p>
+</blockquote>
+<p>私有属性部分：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//可变数组，用于存放初始化的点击按钮</span></span><br><span class="line">@property (nonatomic, strong) NSMutableArray             *pointViews;</span><br><span class="line"><span class="comment">//记录手势滑动的起始点</span></span><br><span class="line">@property (nonatomic, assign) CGPoint                    startPoint;</span><br><span class="line"><span class="comment">//记录手势滑动的结束点</span></span><br><span class="line">@property (nonatomic, assign) CGPoint                    endPoint;</span><br><span class="line"><span class="comment">//存储选中的按钮ID</span></span><br><span class="line">@property (nonatomic, strong) NSMutableArray             *selectedView;</span><br><span class="line"><span class="comment">//手势滑动经过的点的连线</span></span><br><span class="line">@property (nonatomic, strong) CAShapeLayer               *lineLayer;</span><br><span class="line"><span class="comment">//手势滑动的path</span></span><br><span class="line">@property (nonatomic, strong) UIBezierPath               *linePath;</span><br><span class="line"><span class="comment">//用于存储选中的按钮</span></span><br><span class="line">@property (nonatomic, strong) NSMutableArray             *selectedViewCenter;</span><br><span class="line"><span class="comment">//判断时候滑动是否结束</span></span><br><span class="line">@property (nonatomic, assign) BOOL                       touchEnd;</span><br></pre></td></tr></table></figure>
+<p>代码实现部分：</p>
+<p>初始化<code>startPoint</code>，<code>endPoint</code>以及<strong>9</strong>个<code>PointView</code>按钮，<code>startPoint</code>和<code>endPoint</code>默认为<code>0</code>，并设置<code>PointView</code>的<code>ID</code>：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化开始点位和结束点位</span></span><br><span class="line">    self.startPoint = CGPointZero;</span><br><span class="line">    self.endPoint = CGPointZero;</span><br><span class="line">        <span class="comment">//布局手势按钮（采用自定义的全能初始化方法）</span></span><br><span class="line">    <span class="keyword">for</span> (int i = <span class="number">0</span>; i&lt;<span class="number">9</span> ; i++) &#123;</span><br><span class="line">        PointView *pointView = [[PointView alloc] initWithFrame:CGRectMake((i % <span class="number">3</span>) * (SELF_WIDTH / <span class="number">2.0</span> - <span class="number">31.0</span>) + <span class="number">1</span>, (i / <span class="number">3</span>) * (SELF_HEIGHT / <span class="number">2.0</span> - <span class="number">31.0</span>) + <span class="number">1</span>, <span class="number">60</span>, <span class="number">60</span>)</span><br><span class="line">                                                         withID:[NSString stringWithFormat:@<span class="string">"gestures %d"</span>,i + <span class="number">1</span>]];</span><br><span class="line">        [self addSubview:pointView];</span><br><span class="line">        [self.pointViews addObject:pointView];</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>滑动事件：</p>
+<ul>
+<li>开始滑动：</li>
+</ul>
+<p>如果<code>self.touchEnd</code>为<code>YES</code>则直接return，为<code>NO</code>开始以下处理：</p>
+<ol>
+<li>首先获取到滑动的点，遍历所有的<code>PointView</code>，判断该点是否在某个<code>手势按钮</code>范围,在范围内记录状态，否则不做处理;</li>
+<li>判断<code>self.startPoint</code>是否为<code>CGPointZero</code>，如果为<code>YES</code>，则将该<code>手势按钮</code>的<code>center</code>赋值给<code>self.startPoint</code>;</li>
+<li>判断该手势按钮的<code>center</code>是否包含在<code>self.selectedViewCenter</code>中，如果为<code>YES</code>，忽略此次记录，为<code>NO</code>则记录该中心点，用于<code>画线</code>，同样记录该<code>手势按钮</code>的<code>ID</code>，用于记录保存手势密码;</li>
+<li>如果<code>self.startPoint</code>不为<code>CGPointZero</code>，则记录当前滑动到的点为<code>self.endPoint</code>，并划线。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//touch事件</span></span><br><span class="line">- (<span class="keyword">void</span>)touchesMoved:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (self.touchEnd) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    UITouch *touch = [touches anyObject];</span><br><span class="line">    CGPoint point = [touch locationInView:self];</span><br><span class="line">    <span class="comment">//判断手势滑动是否在手势按钮范围</span></span><br><span class="line">    <span class="keyword">for</span> (PointView *pointView <span class="keyword">in</span> self.pointViews) &#123;</span><br><span class="line">        <span class="comment">//滑动到手势按钮范围，记录状态</span></span><br><span class="line">        <span class="keyword">if</span> (CGRectContainsPoint(pointView.frame, point)) &#123;</span><br><span class="line">            <span class="comment">//如果开始按钮为zero，记录开始按钮，否则不需要记录开始按钮</span></span><br><span class="line">            <span class="keyword">if</span> (CGPointEqualToPoint(self.startPoint, CGPointZero)) &#123;</span><br><span class="line">                self.startPoint = pointView.center;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//判断该手势按钮的中心点是否记录，未记录则记录</span></span><br><span class="line">            <span class="keyword">if</span> (![self.selectedViewCenter containsObject:[NSValue valueWithCGPoint:pointView.center]]) &#123;</span><br><span class="line">                [self.selectedViewCenter addObject:[NSValue valueWithCGPoint:pointView.center]];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//判断该手势按钮是否已经选中，未选中就选中</span></span><br><span class="line">            <span class="keyword">if</span> (![self.selectedView containsObject:pointView.ID]) &#123;</span><br><span class="line">                [self.selectedView addObject:pointView.ID];</span><br><span class="line">                pointView.isSelected = YES;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//如果开始点位不为zero则记录结束点位，否则跳过不记录</span></span><br><span class="line">    <span class="keyword">if</span> (!CGPointEqualToPoint(self.startPoint, CGPointZero)) &#123;</span><br><span class="line">        self.endPoint = point;</span><br><span class="line">        [self p_drawLines];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>画线：</li>
+</ul>
+<p>如果<code>self.touchEnd</code>为<code>YES</code>则直接return，为<code>NO</code>开始画线：</p>
+<ol>
+<li>首先移除<code>self.lineLayer</code>,<code>self.linePath</code>,<strong>否则你会发现随着你的滑动，会出现很多条线。</strong>；</li>
+<li>设置<code>self.linePath</code>的起始点，并遍历<code>self.selectedViewCenter</code>,为<code>self.linePath</code>添加节点，最后将<code>self.endPoint</code>添加上去（为结束滑动的时候，<code>self.endPoint</code>为当前滑动位置的点）；</li>
+<li>设置<code>self.lineLayer</code>的相应属性，并添加到<code>self.layer</code>。</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//画线</span></span><br><span class="line">- (<span class="keyword">void</span>)p_drawLines</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//结束手势滑动，不画线</span></span><br><span class="line">    <span class="keyword">if</span> (self.touchEnd) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//移除path的点和lineLayer</span></span><br><span class="line">    [self.lineLayer removeFromSuperlayer];</span><br><span class="line">    [self.linePath removeAllPoints];</span><br><span class="line">    <span class="comment">//画线</span></span><br><span class="line">    [self.linePath moveToPoint:self.startPoint];</span><br><span class="line">    <span class="keyword">for</span> (NSValue *pointValue <span class="keyword">in</span> self.selectedViewCenter) &#123;</span><br><span class="line">        [self.linePath addLineToPoint:[pointValue CGPointValue]];</span><br><span class="line">    &#125;</span><br><span class="line">    [self.linePath addLineToPoint:self.endPoint];</span><br><span class="line">    </span><br><span class="line">    self.lineLayer.path = self.linePath.CGPath;</span><br><span class="line">    self.lineLayer.lineWidth = <span class="number">4.0</span>;</span><br><span class="line">    self.lineLayer.strokeColor = RGBCOLOR(<span class="number">30.0</span>, <span class="number">180.0</span>, <span class="number">244.0</span>).CGColor;</span><br><span class="line">    self.lineLayer.fillColor = [UIColor clearColor].CGColor;</span><br><span class="line">    </span><br><span class="line">    [self.layer addSublayer:self.lineLayer];</span><br><span class="line">    </span><br><span class="line">    self.layer.masksToBounds = YES;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>结束滑动：</li>
+</ul>
+<ol>
+<li>将<code>self.endPoint</code>设置为<code>self.selectedViewCenter.lastObject</code>，如果<code>self.endPoint</code>还是为<code>CGPointZero</code>，则说明未滑动到<code>手势按钮</code>范围，不做任何处理，否则继续以下逻辑处理；</li>
+<li>再次调用<code>-(void)p_drawLines</code>画线；</li>
+<li>判断是<code>设置手势密码</code>还是<code>手势解锁</code>；<ol>
+<li><code>设置手势密码</code>：<ol>
+<li>如果选中的<code>手势按钮</code>数量少于<strong>4</strong>，设置<code>self.touchEnd = NO</code>使其可以重新设置，<code>return</code>结束此次设置；</li>
+<li>如果设置的<code>手势按钮</code>符合要求则调用<code>self.gestureBlock(self.selectedView)</code>将手势密码回传给<code>控制器</code>；</li>
+</ol>
+</li>
+<li><code>手势解锁</code>：<ol>
+<li>获取本地存储的<code>手势密码</code>；<strong><del>我这里用的是<code>NSUserDefaults</code>，其实这是不安全的，建议使用<code>Keychain</code>，我也会在后续的更新中使用<code>Keychain</code></del> 已使用keychain保存密码,具体使用见<a href="https://github.com/yinxing29/YZXUnlock" target="_blank" rel="noopener">Demo</a></strong></li>
+<li>如果<code>self.selectedView</code>和本地手势密码一样，则解锁成功，并设置<code>pointView.isSuccess = YES</code>改变<code>手势按钮</code>样式等，并调用<code>self.unlockBlock(YES)</code>，告知<code>控制器</code>结果；</li>
+<li>否则解锁失败，<code>pointView.isError = YES</code>改变<code>手势按钮</code>样式等,并调用<code>self.unlockBlock(NO)</code>，告知<code>控制器</code>结果；</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)touchesEnded:(NSSet&lt;UITouch *&gt; *)touches withEvent:(UIEvent *)event</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//结束手势滑动的时候，将结束按钮设置为最后一个手势按钮的中心点，并画线</span></span><br><span class="line">    self.endPoint = [self.selectedViewCenter.lastObject CGPointValue];</span><br><span class="line">    <span class="comment">//如果endPoint还是为zero说明未滑动到有效位置，不做处理</span></span><br><span class="line">    <span class="keyword">if</span> (CGPointEqualToPoint(self.endPoint, CGPointZero)) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    [self p_drawLines];</span><br><span class="line">    <span class="comment">//改变手势滑动结束的状态，为yes则无法在滑动手势划线</span></span><br><span class="line">    self.touchEnd = YES;</span><br><span class="line">    <span class="comment">//设置手势时，返回设置的时候密码，否则继续下面的操作进行手势解锁</span></span><br><span class="line">    <span class="keyword">if</span> (_gestureBlock &amp;&amp; _settingGesture) &#123;</span><br><span class="line">        <span class="comment">//手势密码不得小于4个点</span></span><br><span class="line">        <span class="keyword">if</span> (self.selectedView.count &lt; <span class="number">4</span>) &#123;</span><br><span class="line">            self.touchEnd = NO;</span><br><span class="line">            <span class="keyword">for</span> (PointView *pointView <span class="keyword">in</span> self.pointViews) &#123;</span><br><span class="line">                pointView.isSelected = NO;</span><br><span class="line">            &#125;</span><br><span class="line">            [self.lineLayer removeFromSuperlayer];</span><br><span class="line">            [self.selectedView removeAllObjects];</span><br><span class="line">            self.startPoint = CGPointZero;</span><br><span class="line">            self.endPoint = CGPointZero;</span><br><span class="line">            [self.selectedViewCenter removeAllObjects];</span><br><span class="line">            <span class="keyword">if</span> (_settingBlock) &#123;</span><br><span class="line">                self.settingBlock();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        _gestureBlock(self.selectedView);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//手势解锁</span></span><br><span class="line">    NSArray *selectedID = [[NSUserDefaults standardUserDefaults] objectForKey:@<span class="string">"GestureUnlock"</span>];</span><br><span class="line">    <span class="comment">//解锁成功</span></span><br><span class="line">    <span class="keyword">if</span> ([self.selectedView isEqualToArray:selectedID]) &#123;</span><br><span class="line">        <span class="comment">//解锁成功，遍历pointview，设置为成功状态</span></span><br><span class="line">        <span class="keyword">for</span> (PointView *pointView <span class="keyword">in</span> self.pointViews) &#123;</span><br><span class="line">            pointView.isSuccess = YES;</span><br><span class="line">        &#125;</span><br><span class="line">        self.lineLayer.strokeColor = RGBCOLOR(<span class="number">43.0</span>, <span class="number">210.0</span>, <span class="number">110.0</span>).CGColor;</span><br><span class="line">        <span class="keyword">if</span> (_unlockBlock) &#123;</span><br><span class="line">            self.unlockBlock(YES);</span><br><span class="line">        &#125;</span><br><span class="line">        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(<span class="number">1.5</span> * NSEC_PER_SEC)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">            [[NSNotificationCenter defaultCenter] postNotificationName:@<span class="string">"UnlockLoginSuccess"</span> object:nil];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;<span class="keyword">else</span> &#123;<span class="comment">//解锁失败</span></span><br><span class="line">        <span class="comment">//解锁失败，遍历pointView，设置为失败状态</span></span><br><span class="line">        <span class="keyword">for</span> (PointView *pointView <span class="keyword">in</span> self.pointViews) &#123;</span><br><span class="line">            pointView.isError = YES;</span><br><span class="line">        &#125;</span><br><span class="line">        self.lineLayer.strokeColor = RGBCOLOR(<span class="number">222.0</span>, <span class="number">64.0</span>, <span class="number">60.0</span>).CGColor;</span><br><span class="line">        <span class="keyword">if</span> (_unlockBlock) &#123;</span><br><span class="line">            self.unlockBlock(NO);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>到这里就实现了<code>手势解锁</code>的所有逻辑，在实现之前还在担心有什么问题，结果实现出来之后感觉其实很简单。</p>
+<hr>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>希望这篇文章能够帮助到一些人。对于<code>代码</code>和<code>博客</code>的一些<code>规范</code>希望大家谅解一下了，后面也会慢慢去优化的。最后的最后附上Demo的链接 <strong><a href="https://github.com/yinxing29/YZXUnlock" target="_blank" rel="noopener">Demo-GitHub</a></strong>。</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://yoursite.com">yinxing29'blog</a>
+            <p>原文链接: <a href="http://yoursite.com/2018/03/14/iOS指纹解锁和手势解锁/">http://yoursite.com/2018/03/14/iOS指纹解锁和手势解锁/</a>
+            <p>发表日期: <a href="http://yoursite.com/2018/03/14/iOS指纹解锁和手势解锁/">March 14th 2018, 10:37:57</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2018/03/15/iOS 自定义日历（日期选择）控件/" title=  >
+                    <div class="nextTitle">[Untitled Post]</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC版-->
+
+    <!--PC版-->
+
+
+    
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:yinxing29@sina.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/yinxing29" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer wechat" title=wechat>
+                  
+                  <img class="profile-qr" src="http://p5m3egx6g.bkt.clouddn.com/wechat.png" />
+                </span>
+            
+        
+    
+        
+            
+                <span class="iconfont-archer qq" title=qq>
+                  
+                  <img class="profile-qr" src="http://p5m3egx6g.bkt.clouddn.com/qq.png" />
+                </span>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.facebook.com/profile.php?id=100012741854533" class="iconfont-archer facebook" target="_blank" title=facebook></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+        <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span>
+        </span>
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#iOS指纹解锁和手势解锁"><span class="toc-number">1.</span> <span class="toc-text">iOS指纹解锁和手势解锁</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#指纹解锁"><span class="toc-number">1.2.</span> <span class="toc-text">指纹解锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#第一步"><span class="toc-number">1.2.1.</span> <span class="toc-text">第一步</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#第二步"><span class="toc-number">1.2.2.</span> <span class="toc-text">第二步</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#手势解锁"><span class="toc-number">1.3.</span> <span class="toc-text">手势解锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#构思"><span class="toc-number">1.3.1.</span> <span class="toc-text">构思</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实现-（工程代码见文末链接）"><span class="toc-number">1.3.2.</span> <span class="toc-text">实现 （工程代码见文末链接）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最后"><span class="toc-number">1.4.</span> <span class="toc-text">最后</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-archive"> Total : 3 </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> Invalid date </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">Invalid date</span><a class="archive-post-title" href= "/2018/03/15/iOS 自定义日历（日期选择）控件/" >[Untitled Post]</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/09</span><a class="archive-post-title" href= "/2018/05/09/iOS webView缓存，保证加载最新html/" >[Untitled Post]</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/14</span><a class="archive-post-title" href= "/2018/03/14/iOS指纹解锁和手势解锁/" >[Untitled Post]</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: '/',
+        author: 'yinxing29'blog'
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+    
+    </body>
+</html>
+
+
