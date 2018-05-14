@@ -525,13 +525,13 @@ height:50vh;
 <p><link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css"></p>
 <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
 <script>
-const gitment = new Gitment({
+var gitment = new Gitment({
   id: 'firstArticle', // 可选。默认为 location.href
-  owner: 'yinxing29',  //改你自己的名字
-  repo: 'https://github.com/yinxing29/YZXUnlock/issues',  //专门储存评论一个GitHub仓库
+  owner: 'yinxing29',
+  repo: 'https://github.com/yinxing29/YZXUnlock/issues',
   oauth: {
-    client_id: '3d0471920900c002ea9e', //改为你自己的，下同
-    client_secret: 'c1ca98a130c157a8261e3db938deb692523d1eb2', 
+    client_id: '3d0471920900c002ea9e',
+    client_secret: 'c1ca98a130c157a8261e3db938deb692523d1eb2',
   },
 })
 gitment.render('container')
