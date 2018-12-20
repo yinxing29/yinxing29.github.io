@@ -415,7 +415,7 @@ height:50vh;
 <h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>虽然通过这个方式实现了该功能，但是在实现过程中还是有一些东西没有弄懂。<br>比如：</p>
 <ol>
 <li>在<code>webView</code>通过<code>loadRequest</code>加载<code>html</code>的时候，设置了<code>request headers</code>，然后在<code>WKWebView</code>的代理方法<code>webView:didFinishNavigation:</code>方法中获取的<code>状态码</code>永远是<code>200</code>，<code>response headers</code>响应头在修改了<code>html</code>内容后都没有变化，这里获取到的数据和通过<code>NSURLSession</code>获取到的有什么不同。</li>
-<li>还有就是这种方式获取<code>状态码</code>及<code>response headers</code>响应头其实相当于在加载之前重新请求了一下。</li>
+<li><del>还有就是这种方式获取<code>状态码</code>及<code>response headers</code>响应头其实相当于在加载之前重新请求了一下。</del> 使用HEAD请求可以避免网页的二次下载，只请求响应头数据，谢谢<a href="https://www.jianshu.com/u/39e4e99430ed" target="_blank" rel="noopener">王洪亮ios</a>的提醒。</li>
 </ol>
 <p>不知道有没有更好的方法来实现该功能，欢迎讨论和指正。</p>
 <h2 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h2><ol>
@@ -630,17 +630,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS指纹解锁和手势解锁/" >iOS指纹解锁和手势解锁</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
             <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS-自定义日历（日期选择）控件/" >iOS 自定义日历（日期选择）控件</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS-webView缓存，保证加载最新html/" >iOS webView缓存，保证加载最新html</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
-            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS指纹解锁和手势解锁/" >iOS指纹解锁和手势解锁</a>
         </li>
     
     </div>
