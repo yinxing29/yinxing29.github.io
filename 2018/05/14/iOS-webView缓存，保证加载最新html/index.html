@@ -396,7 +396,7 @@ height:50vh;
 <ul>
 <li><code>ETag</code>：服务器验证令牌，文件内容<code>hash</code>。</li>
 <li><code>Last-Modified</code>：响应头标识了资源的最后修改时间。</li>
-<li><code>If-None-Match</code>：比较<code>ETag</code>是否不一致。</li>
+<li><code>If-None-Match</code>：比较<code>ETag</code>是否一致。</li>
 <li><code>If-Modified-Since</code>：比较资源最后修改的时间是否一致。</li>
 </ul>
 <p><strong>关于html的缓存策略可以看看<a href="http://imweb.io/topic/5795dcb6fb312541492eda8c" target="_blank" rel="noopener">这篇博客</a>，讲的很详细</strong></p>
@@ -411,7 +411,7 @@ height:50vh;
 <p>iOS实现方式</p>
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">NSURL *url = [NSURL URLWithString:@&quot;http://172.17.124.102:8888/webViewTest.html&quot;];</span><br><span class="line">    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10];</span><br><span class="line">    request.HTTPMethod = @&quot;HEAD&quot;;</span><br><span class="line">    //获取记录的response headers</span><br><span class="line">    NSDictionary *cachedHeaders = [[NSUserDefaults standardUserDefaults] objectForKey:url.absoluteString];</span><br><span class="line">    //设置request headers</span><br><span class="line">    if (cachedHeaders) &#123;</span><br><span class="line">        NSString *etag = [cachedHeaders objectForKey:@&quot;Etag&quot;];</span><br><span class="line">        if (etag) &#123;</span><br><span class="line">            [request setValue:etag forHTTPHeaderField:@&quot;If-None-Match&quot;];</span><br><span class="line">        &#125;</span><br><span class="line">        NSString *lastModified = [cachedHeaders objectForKey:@&quot;Last-Modified&quot;];</span><br><span class="line">        if (lastModified) &#123;</span><br><span class="line">            [request setValue:lastModified forHTTPHeaderField:@&quot;If-Modified-Since&quot;];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">[[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) &#123;</span><br><span class="line">        NSLog(@&quot;======= %f&quot;,[[NSDate date] timeIntervalSince1970] * 1000);</span><br><span class="line">        // 类型转换</span><br><span class="line">        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;</span><br><span class="line">        NSLog(@&quot;statusCode == %@&quot;, @(httpResponse.statusCode));</span><br><span class="line">        // 判断响应的状态码</span><br><span class="line">        if (httpResponse.statusCode == 304 || httpResponse.statusCode == 0) &#123;</span><br><span class="line">            //如果状态码为304或者0(网络不通?)，则设置request的缓存策略为读取本地缓存</span><br><span class="line">            [request setCachePolicy:NSURLRequestReturnCacheDataElseLoad];</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            //如果状态码为200，则保存本次的response headers，并设置request的缓存策略为忽略本地缓存，重新请求数据</span><br><span class="line">            [[NSUserDefaults standardUserDefaults] setObject:httpResponse.allHeaderFields forKey:request.URL.absoluteString];</span><br><span class="line">            //如果状态码为200，则设置request的缓存策略为忽略本地缓存</span><br><span class="line">            [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        //未更新的情况下读取缓存</span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">            [self.webView loadRequest:request];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;] resume];</span><br></pre></td></tr></table></figure>
-<p>在这里，我的实现方式是在每次请求加载之前，先获取html的<code>response headers</code>响应头，通过返回的<code>状态码</code>最终确定其缓存策略是<code>读取本地缓存</code>还是<code>重新加载</code>。最终达到了预期的效果。</p>
+<p>在这里，我的实现方式是在每次请求加载之前，先获取html的<code>response headers</code>响应头<strong>（使用’HEAD’请求方式，只获取’response headers’，不获取页面）</strong>，通过返回的<code>状态码</code>最终确定其缓存策略是<code>读取本地缓存</code>还是<code>重新加载</code>。最终达到了预期的效果。</p>
 <h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>虽然通过这个方式实现了该功能，但是在实现过程中还是有一些东西没有弄懂。<br>比如：</p>
 <ol>
 <li>在<code>webView</code>通过<code>loadRequest</code>加载<code>html</code>的时候，设置了<code>request headers</code>，然后在<code>WKWebView</code>的代理方法<code>webView:didFinishNavigation:</code>方法中获取的<code>状态码</code>永远是<code>200</code>，<code>response headers</code>响应头在修改了<code>html</code>内容后都没有变化，这里获取到的数据和通过<code>NSURLSession</code>获取到的有什么不同。</li>
@@ -612,17 +612,17 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS-webView缓存，保证加载最新html/" >iOS webView缓存，保证加载最新html</a>
-        </li>
-    
-    
-        <li class="archive-post-item">
             <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS指纹解锁和手势解锁/" >iOS指纹解锁和手势解锁</a>
         </li>
     
     
         <li class="archive-post-item">
             <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS-自定义日历（日期选择）控件/" >iOS 自定义日历（日期选择）控件</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS-webView缓存，保证加载最新html/" >iOS webView缓存，保证加载最新html</a>
         </li>
     
     </div>
