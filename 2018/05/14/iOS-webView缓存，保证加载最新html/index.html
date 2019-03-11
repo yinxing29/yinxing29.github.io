@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="yinxing29">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="yinxing29">
+    <meta name="keywords" content="yinxing29'blog | yinxing29">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>iOS webView缓存，保证加载最新html · yinxing29&#39;blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180501 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180501 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+        
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "http://yx29.oss-cn-beijing.aliyuncs.com/c6e3af28058916954382b27aa8728099.jpg?Expires=1552323163&OSSAccessKeyId=TMP.AQHvbeVpxqId9PSH8tekdlH3qeGDCXOyPM7Kq_0QAS4TGcZfsJX1UY3TirP0AAAwLAIUQBIODR4jbl40-70N9Z966WPnuyACFFBQWCHPWwSdIIrvGyocIp0j_yGd&Signature=nt5J7OP3DPAjLnCYF3a1TAIRmKc%3D" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />    
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >yinxing29</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">iOS webView缓存，保证加载最新html</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>yinxing29</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(http://yx29.oss-cn-beijing.aliyuncs.com/loading.png)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            iOS webView缓存，保证加载最新html
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <!-- 文章页标签  -->
+            
+            <div class="post-intro-meta">
+                <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                <span class="post-intro-time">2018/05/14</span>
+                
+                <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                    <span class="iconfont-archer">&#xe602;</span>
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+                
+                <span class="shareWrapper">
+                    <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                    <span class="shareText">Share</span>
+                    <ul class="shareList">
+                        <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                            <div class="share-qrcode"></div>
+                        </li>
+                        <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                        <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                        <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                        <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                    </ul>
+                </span>
+            </div>
+        
+    </div>
+</div>
+        <script>
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+  
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntroTags = document.getElementsByClassName('post-intro-tags')[0],
+        postIntroMeat = document.getElementsByClassName('post-intro-meta')[0];
+      if (postIntroTags) {
+        postIntroTags.classList.add('post-fade-in');
+      }
+      if (postIntroMeat) {
+        postIntroMeat.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="iOS-webView缓存，保证加载最新html"><a href="#iOS-webView缓存，保证加载最新html" class="headerlink" title="iOS webView缓存，保证加载最新html"></a>iOS webView缓存，保证加载最新html</h1><p>[TOC]</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近有个需求，修改<code>webview（WKWebview）</code>加载的缓存机制。因现在使用的缓存机制是<code>NSURLRequestReturnCacheDataElseLoad</code>(<code>NSURLRequest</code>的缓存机制下面会说到)。这个缓存机制就是<code>只有当本地缓存不存在的时候才会请求，否则加载本地缓存</code>，这样就导致当html有所修改的话，下次进入不能主动刷新网页，还是加载的缓存，需要手动刷新才能看到最新内容。现在的要求就是当：当html过期后（html有修改），在下次主动加载html的时候自动加载最新内容。</p>
+<h2 id="寻找解决方案"><a href="#寻找解决方案" class="headerlink" title="寻找解决方案"></a>寻找解决方案</h2><h4 id="1-查看NSURLRequest的API"><a href="#1-查看NSURLRequest的API" class="headerlink" title="1. 查看NSURLRequest的API"></a>1. 查看<code>NSURLRequest</code>的<code>API</code></h4><p>既然之前使用了<code>NSURLRequest</code>的缓存机制，那么首先想到的就是看看有没有对应的缓存机制。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">typedef NS_ENUM(NSUInteger, NSURLRequestCachePolicy)</span><br><span class="line">&#123;</span><br><span class="line">    NSURLRequestUseProtocolCachePolicy = 0,//默认遵守http缓存策略</span><br><span class="line"></span><br><span class="line">    NSURLRequestReloadIgnoringLocalCacheData = 1, //忽略本地缓存</span><br><span class="line">    NSURLRequestReloadIgnoringLocalAndRemoteCacheData = 4, // Unimplemented //忽略本地和远程缓存</span><br><span class="line">    NSURLRequestReloadIgnoringCacheData = NSURLRequestReloadIgnoringLocalCacheData,</span><br><span class="line"></span><br><span class="line">    NSURLRequestReturnCacheDataElseLoad = 2,//只有当本地缓存不存在的时候才会请求，否则加载本地缓存</span><br><span class="line">    NSURLRequestReturnCacheDataDontLoad = 3,//只加载本地缓存，没有缓存也不会请求</span><br><span class="line"></span><br><span class="line">    NSURLRequestReloadRevalidatingCacheData = 5, // Unimplemented //判断缓存是否过期</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>忽略<code>Unimplemented</code>，可以看到<code>NSURLRequestReloadRevalidatingCacheData</code>不正是我们需要的缓存策略吗？当你高高兴兴的将缓存策略设置为<code>NSURLRequestReloadRevalidatingCacheData</code>后，然后加载html，然后修改html内容，发现确实会加载最新的。这个时候你一定会很高心，然而当你打印html加载时间的时候，你会发现html未修改的情况下和不加载缓存所用的时间都是一样的，其结论就是并没有加载缓存。这个时候你再看<code>Unimplemented</code>就会焕然大悟了。</p>
+<p><strong>所以通过修改NSURLRequest的缓存策略是无法实现该功能的，pass</strong></p>
+<h4 id="2-网上搜索webView的缓存加载策略"><a href="#2-网上搜索webView的缓存加载策略" class="headerlink" title="2. 网上搜索webView的缓存加载策略"></a>2. 网上搜索<code>webView</code>的缓存加载策略</h4><p>通过设置<code>NSURLRequest</code>的缓存机制无法达到我们的目的。没办法，只有找其他的方法了。<br>在查看了很多篇相关的技术博客后，终于找到了一个方法，就是设置<code>ETag/If-None-Match</code>和<code>Last-Modified/If-Modified-Since</code>来判断html内容是否有更新。其中<code>If-None-Match</code>和<code>If-Modified-Since</code>是设置在<code>request headers</code>请求头中，<code>ETag</code>和<code>Last-Modified</code>是<code>response headers</code>响应头中，由服务器返回的。</p>
+<blockquote>
+<p>参数介绍</p>
+</blockquote>
+<ul>
+<li><code>ETag</code>：服务器验证令牌，文件内容<code>hash</code>。</li>
+<li><code>Last-Modified</code>：响应头标识了资源的最后修改时间。</li>
+<li><code>If-None-Match</code>：比较<code>ETag</code>是否一致。</li>
+<li><code>If-Modified-Since</code>：比较资源最后修改的时间是否一致。</li>
+</ul>
+<p><strong>关于html的缓存策略可以看看<a href="http://imweb.io/topic/5795dcb6fb312541492eda8c" target="_blank" rel="noopener">这篇博客</a>，讲的很详细</strong></p>
+<blockquote>
+<p>基本实现原理</p>
+</blockquote>
+<ol>
+<li>第一次请求某个html的时候，响应头<code>response headers</code>中返回<code>ETag</code>和<code>Last-Modified</code>（需要html做设置），将其记录下来。</li>
+<li>后面每次请求时，在<code>request headers</code>请求头中设置<code>If-None-Match</code>和<code>If-Modified-Since</code>，其中<code>If-None-Match</code>就是记录的<code>ETag</code>值，<code>If-Modified-Since</code>就是记录的<code>Last-Modified</code>值。该值会和服务端的<code>ETag</code>和<code>Last-Modified</code>比较。如果相同则返回状态码<code>304</code>，说明没有更新，否则返回<code>200</code>，说明需要重新请求。</li>
+</ol>
+<blockquote>
+<p>iOS实现方式</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">NSURL *url = [NSURL URLWithString:@&quot;http://172.17.124.102:8888/webViewTest.html&quot;];</span><br><span class="line">    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:10];</span><br><span class="line">    //判断是否有更新，只请求responseHeader</span><br><span class="line">    request.HTTPMethod = @&quot;HEAD&quot;;</span><br><span class="line">    //获取记录的response headers</span><br><span class="line">    NSDictionary *cachedHeaders = [[NSUserDefaults standardUserDefaults] objectForKey:url.absoluteString];</span><br><span class="line">    //设置request headers</span><br><span class="line">    if (cachedHeaders) &#123;</span><br><span class="line">        NSString *etag = [cachedHeaders objectForKey:@&quot;Etag&quot;];</span><br><span class="line">        if (etag) &#123;</span><br><span class="line">            [request setValue:etag forHTTPHeaderField:@&quot;If-None-Match&quot;];</span><br><span class="line">        &#125;</span><br><span class="line">        NSString *lastModified = [cachedHeaders objectForKey:@&quot;Last-Modified&quot;];</span><br><span class="line">        if (lastModified) &#123;</span><br><span class="line">            [request setValue:lastModified forHTTPHeaderField:@&quot;If-Modified-Since&quot;];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">[[[NSURLSession sharedSession] dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error) &#123;</span><br><span class="line">        NSLog(@&quot;======= %f&quot;,[[NSDate date] timeIntervalSince1970] * 1000);</span><br><span class="line">        // 类型转换</span><br><span class="line">        NSHTTPURLResponse *httpResponse = (NSHTTPURLResponse *)response;</span><br><span class="line">        NSLog(@&quot;statusCode == %@&quot;, @(httpResponse.statusCode));</span><br><span class="line">        // 判断响应的状态码</span><br><span class="line">        if (httpResponse.statusCode == 304 || httpResponse.statusCode == 0) &#123;</span><br><span class="line">            //如果状态码为304或者0(网络不通?)，则设置request的缓存策略为读取本地缓存</span><br><span class="line">            [request setCachePolicy:NSURLRequestReturnCacheDataElseLoad];</span><br><span class="line">        &#125;else &#123;</span><br><span class="line">            //如果状态码为200，则保存本次的response headers，并设置request的缓存策略为忽略本地缓存，重新请求数据</span><br><span class="line">            [[NSUserDefaults standardUserDefaults] setObject:httpResponse.allHeaderFields forKey:request.URL.absoluteString];</span><br><span class="line">            //如果状态码为200，则设置request的缓存策略为忽略本地缓存</span><br><span class="line">            [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        //未更新的情况下读取缓存</span><br><span class="line">        dispatch_async(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">            //判断结束之后，修改请求方式，加载网页</span><br><span class="line">            request.HTTPMethod = @&quot;GET&quot;;</span><br><span class="line">            [self.webView loadRequest:request];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;] resume];</span><br></pre></td></tr></table></figure>
+<p>在这里，我的实现方式是在每次请求加载之前，先获取html的<code>response headers</code>响应头<strong>（使用’HEAD’请求方式，只获取’response headers’，不获取页面）</strong>，通过返回的<code>状态码</code>最终确定其缓存策略是<code>读取本地缓存</code>还是<code>重新加载</code>。最终达到了预期的效果。</p>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>虽然通过这个方式实现了该功能，但是在实现过程中还是有一些东西没有弄懂。<br>比如：</p>
+<ol>
+<li>在<code>webView</code>通过<code>loadRequest</code>加载<code>html</code>的时候，设置了<code>request headers</code>，然后在<code>WKWebView</code>的代理方法<code>webView:didFinishNavigation:</code>方法中获取的<code>状态码</code>永远是<code>200</code>，<code>response headers</code>响应头在修改了<code>html</code>内容后都没有变化，这里获取到的数据和通过<code>NSURLSession</code>获取到的有什么不同。</li>
+<li><del>还有就是这种方式获取<code>状态码</code>及<code>response headers</code>响应头其实相当于在加载之前重新请求了一下。</del> 使用HEAD请求可以避免网页的二次下载，只请求响应头数据，谢谢<a href="https://www.jianshu.com/u/39e4e99430ed" target="_blank" rel="noopener">王洪亮ios</a>的提醒。</li>
+</ol>
+<p>不知道有没有更好的方法来实现该功能，欢迎讨论和指正。</p>
+<h2 id="参考博客"><a href="#参考博客" class="headerlink" title="参考博客"></a>参考博客</h2><ol>
+<li><a href="http://imweb.io/topic/5795dcb6fb312541492eda8c" target="_blank" rel="noopener">http://imweb.io/topic/5795dcb6fb312541492eda8c</a></li>
+<li><a href="https://blog.cnbluebox.com/blog/2015/05/07/architecture-ios-1/" target="_blank" rel="noopener">https://blog.cnbluebox.com/blog/2015/05/07/architecture-ios-1/</a></li>
+<li><a href="https://www.jianshu.com/p/ebcb0a1823be#comment-23319974" target="_blank" rel="noopener">https://www.jianshu.com/p/ebcb0a1823be#comment-23319974</a></li>
+</ol>
+<p><div id="container"></div></p>
+<p><link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css"></p>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: 'thirdArticle', // 可选。默认为 location.href
+  owner: 'yinxing29',
+  repo: 'YZXWebViewCache',
+  oauth: {
+    client_id: '3d0471920900c002ea9e',
+    client_secret: 'c1ca98a130c157a8261e3db938deb692523d1eb2',
+  },
+})
+gitment.render('container')
+</script>
+
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://yinxing29.github.io">yinxing29</a>
+            <p>原文链接: <a href="http://yinxing29.github.io/2018/05/14/iOS-webView缓存，保证加载最新html/">http://yinxing29.github.io/2018/05/14/iOS-webView缓存，保证加载最新html/</a>
+            <p>发表日期: <a href="http://yinxing29.github.io/2018/05/14/iOS-webView缓存，保证加载最新html/">May 14th 2018, 7:41:09</a>
+            <p>版权声明: 未经同意，禁止转载</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/05/14/iOS-自定义日历（日期选择）控件/" title= iOS 自定义日历（日期选择）控件 >
+                    <div class="prevTitle">iOS 自定义日历（日期选择）控件</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC版-->
+
+    <!--PC版-->
+
+
+    
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:yinxing29@sina.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/yinxing29" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.facebook.com/profile.php?id=100012741854533" class="iconfont-archer facebook" target="_blank" title=facebook></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+        <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span>
+        </span>
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#iOS-webView缓存，保证加载最新html"><span class="toc-number">1.</span> <span class="toc-text">iOS webView缓存，保证加载最新html</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#寻找解决方案"><span class="toc-number">1.2.</span> <span class="toc-text">寻找解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-查看NSURLRequest的API"><span class="toc-number">1.2.0.1.</span> <span class="toc-text">1. 查看NSURLRequest的API</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-网上搜索webView的缓存加载策略"><span class="toc-number">1.2.0.2.</span> <span class="toc-text">2. 网上搜索webView的缓存加载策略</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#最后"><span class="toc-number">1.3.</span> <span class="toc-text">最后</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考博客"><span class="toc-number">1.4.</span> <span class="toc-text">参考博客</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-archive"> Total : 3 </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS指纹解锁和手势解锁/" >iOS指纹解锁和手势解锁</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS-自定义日历（日期选择）控件/" >iOS 自定义日历（日期选择）控件</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS-webView缓存，保证加载最新html/" >iOS webView缓存，保证加载最新html</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: '/',
+        author: 'yinxing29'
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+    
+    </body>
+</html>
+
+
