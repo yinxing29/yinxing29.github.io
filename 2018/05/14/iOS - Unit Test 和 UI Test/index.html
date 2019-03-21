@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="yinxing29">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="yinxing29">
+    <meta name="keywords" content="yinxing29'blog | yinxing29">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>iOS指纹解锁和手势解锁 · yinxing29&#39;blog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180501 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180501 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+        
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "http://yx29.oss-cn-beijing.aliyuncs.com/c6e3af28058916954382b27aa8728099.jpg?Expires=1552323163&OSSAccessKeyId=TMP.AQHvbeVpxqId9PSH8tekdlH3qeGDCXOyPM7Kq_0QAS4TGcZfsJX1UY3TirP0AAAwLAIUQBIODR4jbl40-70N9Z966WPnuyACFFBQWCHPWwSdIIrvGyocIp0j_yGd&Signature=nt5J7OP3DPAjLnCYF3a1TAIRmKc%3D" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />    
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >yinxing29</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">iOS指纹解锁和手势解锁</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>yinxing29</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(https://yx29.oss-cn-beijing.aliyuncs.com/hello_world.png?Expires=1553188163&OSSAccessKeyId=TMP.AQG5wv5gCBnz-PBM4L3r-UNuLW1fU3-VMDcrorPolQptXAktR7bL-yDL4oNCADAtAhReNBFoPgT0-60rvYQUWc7bBfGzwwIVAIwE-UBflC38ZW97O0kfkEI1EI1O&Signature=m4NpFisUjhtORrv8CbahOLBVhXU%3D)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            iOS指纹解锁和手势解锁
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <!-- 文章页标签  -->
+            
+            <div class="post-intro-meta">
+                <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                <span class="post-intro-time">2018/05/14</span>
+                
+                <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                    <span class="iconfont-archer">&#xe602;</span>
+                    <span id="busuanzi_value_page_pv"></span>
+                </span>
+                
+                <span class="shareWrapper">
+                    <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                    <span class="shareText">Share</span>
+                    <ul class="shareList">
+                        <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                            <div class="share-qrcode"></div>
+                        </li>
+                        <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                        <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                        <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                        <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                    </ul>
+                </span>
+            </div>
+        
+    </div>
+</div>
+        <script>
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+  
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntroTags = document.getElementsByClassName('post-intro-tags')[0],
+        postIntroMeat = document.getElementsByClassName('post-intro-meta')[0];
+      if (postIntroTags) {
+        postIntroTags.classList.add('post-fade-in');
+      }
+      if (postIntroMeat) {
+        postIntroMeat.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <h1 id="Unit-Test-和-UI-Test"><a href="#Unit-Test-和-UI-Test" class="headerlink" title="Unit Test 和 UI Test"></a>Unit Test 和 UI Test</h1><p>[TOC]</p>
+<h2 id="Unit-Test"><a href="#Unit-Test" class="headerlink" title="Unit Test"></a>Unit Test</h2><blockquote>
+<p><strong>单元测试：</strong>从字面上的意思理解就是，将某<code>一部分</code>的代码拆成<code>一块一块</code>的代码进行测试，每一块代码就是一个独立的<code>单元</code>。一般用于测试某一块代码的逻辑是否正确。</p>
+</blockquote>
+<ul>
+<li><p><strong>Unit Test</strong>文件</p>
+<p>  在每个工程创建的时候，都会有3个勾选项供你勾选，其中两个默认选中的   <code>Include Unit Tests</code>和<code>Include UI Tests</code>，勾选后就会在工程文件中生成两个文件夹<code>ProjectNameTests</code>和<code>ProjectNameUITests</code>，<code>ProjectNameTests</code>就是用于编写这个工程的<strong>单元测试</strong>的地方，而<code>ProjectNameUITests</code>就是用于编写<strong>UI 自动化测试</strong>的地方。也可以通过<strong>file -&gt; New -&gt; Target -&gt; iOS -&gt; 搜索<code>test</code>,添加<code>iOS Unit Testing Bundle</code>和<code>iOS UI Testing Bundle</code></strong>添加。我们先来看一下<strong>Unit Test</strong>。</p>
+<p>  我们可以在<code>ProjectNameTests</code>分组中创建对应功能模块的测试文件，系统会自动创建几个方法：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">//所有测试用例运行之前都会运行的方法，在该测试文件中的各个测试单元都会用到的一些实体类，都可以在该方法中init</span><br><span class="line">- (void)setUp &#123;</span><br><span class="line">    [super setUp];</span><br><span class="line">    // Put setup code here. This method is called before the invocation of each test method in the class.</span><br><span class="line">&#125;</span><br><span class="line">//所有测试用例都执行完成之后会执行该方法</span><br><span class="line">- (void)tearDown &#123;</span><br><span class="line">    // Put teardown code here. This method is called after the invocation of each test method in the class.</span><br><span class="line">    [super tearDown];</span><br><span class="line">&#125;</span><br><span class="line">//测试用例编写用例，在编写测试单元的时候，所有方法都必须以“test”开头，并却不能带任何参数</span><br><span class="line">- (void)testExample &#123;</span><br><span class="line">    // This is an example of a functional test case.</span><br><span class="line">    // Use XCTAssert and related functions to verify your tests produce the correct results.</span><br><span class="line">&#125;</span><br><span class="line">//用于性能测试，比如for循环的耗时测试等。</span><br><span class="line">- (void)testPerformanceExample &#123;</span><br><span class="line">    // This is an example of a performance test case.</span><br><span class="line">    [self measureBlock:^&#123;</span><br><span class="line">        // Put the code you want to measure the time of here.</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>主要用途：</p>
+<ol>
+<li>当修改某个公共类的时候，为防止对其他地方造成影响，需要验证一下其他地方是否正确，可以使用单元测试验证，而不需要一步一步的去实现复杂的操作。</li>
+<li>在开发的时候，有时候需要反复调试接口返回的数据情况或者验证某段代码的正确性，可能要一遍一遍的运行，而每次运行后都需要点击到当前页面，这样经常需要重复复杂的操作，而<code>Unit Test</code>则可以省略那些复杂操作。</li>
+</ol>
+</li>
+<li><p>异步操作</p>
+<p>  <strong>Unit Test</strong>的每一个测试单元都可以看做是一个串行线程的程序，当你的测试单元涉及到<code>异步</code>的时候，就需要用到<code>XCTestExpectation</code>，它表示你的一个“期望”，在规定的时间内，当你的“期望”完成时，才会结束这个测试单元。实例如下： </p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">XCTestExpectation *expectation = [self expectationWithDescription:@&quot;网络请求&quot;];</span><br><span class="line">[self.viewModel requestSuccessBlock:^(id responseObject)&#123;</span><br><span class="line">    [expectation fulfill];</span><br><span class="line">&#125; failedBlock:^(NSError *error)&#123;</span><br><span class="line">    [expectation fulfill];</span><br><span class="line">&#125;];</span><br><span class="line">//在10s内还没有达到期望的时候，就会提示错误</span><br><span class="line">[self waitForExpectationsWithTimeout:10.0 handler:nil];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>常用的断言测试语法</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">XCTFail(format…)  //生成一个失败的测试；</span><br><span class="line">XCTAssertNil(a1, format...)  //a1 = nil，测试通过</span><br><span class="line">XCTAssertNotNil(a1, format…) //a1 != nil，测试通过</span><br><span class="line">XCTAssert(expression, format...) //传入的expression结果为 true，测试通过；</span><br><span class="line">XCTAssertTrue(expression, format...) //同上</span><br><span class="line">XCTAssertFalse(expression, format...)  //传入的expression结果为false，测试通过；</span><br><span class="line">XCTAssertEqualObjects(a1, a2, format...)  //[对象a1 isEqual:对象a2]为true，测试通过</span><br><span class="line">XCTAssertNotEqualObjects(a1, a2, format...)  //[对象a1 isEqual:对象a2]为false，测试通过</span><br><span class="line">XCTAssertEqual(a1, a2, format...)  //a1 = a2(a1,a2可以是整型，浮点型，结构体，联合体)，测试通过；</span><br><span class="line">XCTAssertNotEqual(a1, a2, format...)  //a1 != a2(a1,a2可以是整型，浮点型，结构体，联合体)，测试通过；</span><br><span class="line">XCTAssertEqualWithAccuracy(a1, a2, accuracy, format...)  //|a1 - a2| = accuracy,测试通过</span><br><span class="line">XCTAssertNotEqualWithAccuracy(a1, a2, accuracy, format...)   //|a1 - a2| != accuracy,测试通过</span><br><span class="line">XCTAssertThrows(expression, format...)  //异常测试，当expression发生异常时通过；反之不通过；</span><br><span class="line">XCTAssertThrowsSpecific(expression, specificException, format...)  //异常测试，当expression发生specificException异常时通过；反之发生其他异常或不发生异常均不通过；</span><br><span class="line">XCTAssertThrowsSpecificNamed(expression, specificException, exception_name, format...)  //异常测试，当expression发生具体异常、具体异常名称的异常时通过测试；</span><br><span class="line">XCTAssertNoThrow(expression, format…)  //异常测试，当expression没有发生异常时通过测试；</span><br><span class="line">XCTAssertNoThrowSpecific(expression, specificException, format...)  //异常测试，当expression没有发生特定异常时，通过测试；</span><br><span class="line">XCTAssertNoThrowSpecificNamed(expression, specificException, exception_name, format...)  //异常测试，当expression没有发生具体异常、具体异常名称的异常时通过测试。</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line">format可以设置断言不通过时的提示语，同时会将传入的参数展示出来。有时候为了结果更加一目了然，可以使用相反的断言语法，提示正确的内容。</span><br><span class="line">*/</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>Unit Test注意事项</strong></p>
+<p>   <strong>Unit Test</strong>是一个<strong>target</strong>，所以在<strong>Unit Test</strong>中导入类的时候，如果涉及到<strong>prefix header</strong>中的类或者通过<strong>cocoaPods</strong>导入的三方库的时候，需要在对应的<strong>target</strong>中需要设置<strong>prefix header path</strong>和在<strong>Podfile</strong>文件中添加对应的<strong>target</strong>。</p>
+</li>
+</ul>
+<h2 id="UI-Test"><a href="#UI-Test" class="headerlink" title="UI Test"></a>UI Test</h2><p><strong>UI自动化测试：</strong>通过计算机语言模拟用户操作。在<code>iOS 3.0</code>的时候，苹果引入了<code>UI Accessibility</code>，用来辅助身体不方便的人来使用app，与<code>VoiceOver</code>相互配合，用来阅读被<code>UI Accessibility</code>分类和标记的<code>UI</code>元素操作app。而<strong>UI Test</strong>就是基于<code>UI Accessibility</code>的，所以我们在写<strong>UI Test</strong>时，其实就是通过对应的API来<code>查询</code>到UI上面的<code>元素</code>，并模拟点击等事件。为了方便开发者编写测试代码，<code>xCode</code>有一个功能叫录屏，当你开始录制的时候，他会将你的一系列操作自动生成代码，但是要想后面正常跑起来，还需要自己去修改，所以还是需要你去了解<strong>UI Test</strong>相应的API。<br><img src="https://yx29.oss-cn-beijing.aliyuncs.com/UI_Test.jpg?Expires=1553185962&amp;OSSAccessKeyId=TMP.AQG5wv5gCBnz-PBM4L3r-UNuLW1fU3-VMDcrorPolQptXAktR7bL-yDL4oNCADAtAhReNBFoPgT0-60rvYQUWc7bBfGzwwIVAIwE-UBflC38ZW97O0kfkEI1EI1O&amp;Signature=GnN60tFi%2F0%2BiLpmVCFjgPq1SkzU%3D" alt="image"></p>
+<p>在<strong>UI Test</strong>中我们使用到的类主要有<code>XCUIApplication</code>，<code>XCUIElementQuery</code>，<code>XCUIElement</code>。</p>
+<h3 id="XCUIApplication"><a href="#XCUIApplication" class="headerlink" title="XCUIApplication"></a>XCUIApplication</h3><ul>
+<li><p>继承自<strong>XCUElement</strong>，类似于<strong>AppDelegate</strong>，管理应用程序的生命周期，在写测试代码的时候，可以说最重要的一句代码就是<code>XCUIApplication *app = [[XCUIApplication alloc] init];</code>，后续获取界面的元素都需要通过<code>app</code>来获取。</p>
+</li>
+<li><p>属性：</p>
+<ol>
+<li><strong>launchArguments</strong>：将在启动时传递给应用程序的参数。</li>
+<li><strong>launchEnvironment</strong>：将在启动时传递给应用程序的环境变量。</li>
+<li><strong>state</strong>：只读。应用程序的状态。</li>
+</ol>
+</li>
+<li><p>方法：</p>
+<ol>
+<li><strong>-launch</strong>:启动程序。</li>
+<li><strong>-terminate</strong>:终止程序。</li>
+<li>-activate：激活应用程序。</li>
+<li>-(BOOL)waitForState:(XCUIApplicationState)state timeout:(NSTimeInterval)timeout：等待应用程序进入某种状态，几秒钟后失效，如果应用程序当前处于指定状态或转换到所需状态，则返回YES，继续执行下面的代码。</li>
+</ol>
+</li>
+</ul>
+<p>创建<strong>UI Test</strong>文件，系统自动生成的方法和<strong>Unit Test</strong>是差不多的，添加测试方法的规则也一样，<code>test</code>开头，不能<code>传参</code>。</p>
+<h3 id="XCUIElementQuery"><a href="#XCUIElementQuery" class="headerlink" title="XCUIElementQuery"></a>XCUIElementQuery</h3><p>查询元素，可以说是所有UI元素的一个容器。</p>
+<ul>
+<li>属性：<ol>
+<li><strong>element:</strong>当<code>query</code>只有一个元素的时候，<code>query</code>就是<code>element</code>，可以执行<code>点击</code>等操作。</li>
+<li>count:<code>query</code>中元素的数量。</li>
+<li>allElementsBoundByAccessibilityElement:得到<code>query</code>中所有的<code>XCUIElement</code>元素。</li>
+<li>allElementsBoundByIndex:得到<code>query</code>中所有的<code>XCUIElement</code>元素。</li>
+<li>debugDescription:提供有关查询的调试信息。</li>
+</ol>
+</li>
+<li><p><strong>方法：</strong></p>
+<ol>
+<li><del><strong>-elementAtIndex:</strong>通过下标来获取对应的元素，返回一个<code>XCUIElement</code>，在<code>iOS9</code>被弃用，可以使用<strong>-elementBoundByIndex</strong>。</del></li>
+<li><strong>-elementBoundByIndex：</strong>通过下标来获取<code>query</code>中的元素，返回一个<code>XCUIElement</code>。</li>
+<li><strong>-elementMatchingPredicate：</strong>通过匹配<code>NSPredicate</code>（如：<code>placeholderValue == @&quot;Type in number&quot;</code>）来获取元素，返回一个<code>XCUIElement</code>。</li>
+<li><strong>-elementMatchingType:identifier:</strong>通过类型（如：<code>XCUIElementTypeTextField</code>）和id（可以是<code>UIButton</code>的<code>title</code>）来获取一个元素，返回一个<code>XCUIElement</code>。</li>
+<li><strong>-objectForKeyedSubscript:</strong>返回一个由键指定的标识符的子代元素，返回一个<code>XCUIElement</code>。<strong>？？？</strong></li>
+<li><strong>-descendantsMatchingType:</strong>传入一个元素类型，返回一个新的<code>XCUIElementQuery</code>，查询对象为当前控件的子子孙孙元素。</li>
+<li><strong>-childrenMatchingType：</strong>传入一个元素类型，返回一个新的<code>XCUIElementQuery</code>，查询对象为当前控件的子元素。</li>
+<li><strong>-matchingPredicate:</strong>传入<code>NSPredicate</code>，过滤元素，得到对应的<code>XCUIElementQuery</code>。</li>
+<li><strong>-matchingType:identifier:</strong>通过类型和id来获取一个新的<code>XCUIElementQuery</code>。</li>
+<li><strong>-matchingIdentifier:</strong>通过id得到一个新的<code>XCUIElementQuery</code>。</li>
+<li><strong>-containingPredicate:</strong>通过<code>NSPredicate</code>，从子节点中找到包含该条件的<code>XCUIElementQuery</code>对象。</li>
+<li><p><strong>-containingType:identifier:</strong>通过类型和id从子节点中找到包含该条件的<code>XCUIElementQuery</code>对象。</p>
+<p>事例：   </p>
+</li>
+</ol>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h3 id="XCUIElement"><a href="#XCUIElement" class="headerlink" title="XCUIElement"></a>XCUIElement</h3><ul>
+<li><strong>XCTest.framework</strong>中代表所有<strong>UI控件</strong>的抽象类，通过这个类来实现<code>点击</code>，<code>滑动</code>等操作。</li>
+<li>属性：<ol>
+<li>exists：判断元素是否存在。</li>
+<li>hittable:确定是否可以为元素计算生命值。</li>
+<li>debugDescription:提供有关该元素的调试信息。</li>
+</ol>
+</li>
+<li><p>方法：</p>
+<ol>
+<li><strong>-waitForExistenceWithTimeout:</strong>等待元素的exist属性为真所需的指定时间量，如果超时过期而元素不存在，则返回false。</li>
+<li><strong>-descendantsMatchingType:</strong>返回与指定类型匹配的元素的所有后代的查询。</li>
+<li><strong>-childrenMatchingType:</strong>返回与指定类型匹配的元素的所有直接子节点的查询。</li>
+<li>-coordinateWithNormalizedOffset:创建并返回带有标准化偏移量的新坐标。</li>
+<li><strong>-typeText:</strong>输入文本。</li>
+<li><strong>-tap:</strong>点击。</li>
+<li><strong>-doubleTap:</strong>双击。</li>
+<li><strong>-twoFingerTap:</strong>双指点击。</li>
+<li><strong>-tapWithNumberOfTaps:numberOfTouches</strong>使用一个或多个触点发送一个或多个轻击。</li>
+<li><strong>-pressForDuration:</strong>长按指定时间。</li>
+<li><strong>-pressForDuration:thenDragToElement:</strong>拖动到指定元素</li>
+<li><strong>-swipeUp:</strong>上滑。</li>
+<li><strong>-swipeDown:</strong>下滑。</li>
+<li><strong>-swipeLeft:</strong>左滑。</li>
+<li><strong>-swipeRight:</strong>右滑。</li>
+<li><strong>-pinchWithScale:velocity:</strong>捏合手势。</li>
+<li><strong>-rotate:withVelocity:</strong>旋转手势。</li>
+<li><strong>-adjustToPickerWheelValue:</strong>修改<code>pickerView</code>的选择值</li>
+</ol>
+<p>事例：</p>
+</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="坑"><a href="#坑" class="headerlink" title="坑"></a>坑</h2><ol>
+<li>在<strong>Unit Test</strong>中，只需要注意一下<code>异步操作</code>。</li>
+<li>在<strong>UI Test</strong>中，第一次写测试代码，就需要注意的很多。<ul>
+<li>通过录制自动生成的代码中，中文会转成<code>Unicode</code>，需要手动修改。</li>
+<li><strong>UI Test</strong>运行时，其实就是自动操作app，而有的界面是需要等待网络请求结束后才刷新或者添加控件的，但是测试代码却不会真实的等待请求结束，所以当去app上查询某个元素并点击的时候，会导致测试代码崩溃。这个时候，就需要我们去等待页面绘制出来后才执行点击等操作。解决方法见下面代码块一。</li>
+<li>在录屏过程中，点击<code>cell</code>时，报错：<code>Timestamped Event Matchng Error: Failed To Find Matching Element</code>，开始的时候一脸懵逼，后来一次不小心点到一个<code>UILabel</code>发现居然又可以了，后来查阅资料，发现<code>UI</code>控件有一个属性<code>isAccessibilityElement</code>，这个属性就是用来表示该控件是否可以被访问。而<code>UIView</code>的为<code>NO</code>，所以无法找到<code>Element</code>。需要点击<code>cell</code>上的<code>UILabel</code>等可以被访问的控件，或者获取<code>UITableView</code>上所有<code>cell</code>，然后通过<strong>下标</strong>去获取<code>cell</code>元素。解决方法见下面代码块二。</li>
+<li>通过<code>XCUIElement</code>的<code>swipeUp</code>方法滑动，无法滑到指定位置。解决方法见下面代码块三。</li>
+<li>有的界面，在请求到数据之前，就会将界面布局并显示出来，然后根据请求到的数据，隐藏获取添加其他控件，这个时候，如果在网络请求结束之前去<code>查询</code>某个<code>元素</code>，并<code>tap</code>，测试程序会崩溃。你看控制台的打印消息，就会告诉你<code>元素偏移</code>了。其实就是因为网络请求前后<code>元素</code> 位置发生了变化。所以这个时候，你需要等待网络请求结束再去<code>查询</code>这个<code>元素</code>。（我这里是通过网络请求是的<code>菊花</code>来判断网络请求是否结束）。</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">/** </span><br><span class="line">等待页面绘制完成</span><br><span class="line">*/</span><br><span class="line">    //1. 通过sleep使其等待一定时间。一定时间之后才执行后面的方法</span><br><span class="line">    sleep(10);</span><br><span class="line">    /*2. 这里因为这个弹窗可能走[alert.buttons[@&quot;确定&quot;] tap]的时候alert未弹出而获取失败，导致测试代码崩溃。</span><br><span class="line">    所以这里给了一个等待，在20sm内，测试程序会每隔1s去验证title为@&quot;重要提示&quot;的alert是否找到，如果找到，就立即继续运行后面的代码。</span><br><span class="line">    如果在20s内没有找到的话，就会报错，中断执行，提示超时未实现该等待。在这里NSPredicate的条件可以根据具体需求修改为其他的。*/</span><br><span class="line">    XCUIElement *alert = app.alerts[@&quot;重要提示&quot;];</span><br><span class="line">    [self expectationForPredicate:[NSPredicate predicateWithFormat:@&quot;exists = 1&quot;] </span><br><span class="line">              evaluatedWithObject:alert </span><br><span class="line">                          handler:nil];</span><br><span class="line">    //等待20s内，上述条件满足后才继续下面的内容（不一定等待20s）</span><br><span class="line">    [self waitForExpectationsWithTimeout:20.0 handler:nil];</span><br><span class="line">    [alert.buttons[@&quot;确定&quot;] tap];</span><br><span class="line">    //3.第三种方式和第二种方式差不多，也是在20s内每隔1s去判断alert是否存在。</span><br><span class="line">    XCUIElement *alert = app.alerts[@&quot;重要提示&quot;];</span><br><span class="line">    BOOL alertShow = [alert waitForExistenceWithTimeout:20.0];</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/** </span><br><span class="line">获取界面上的 元素</span><br><span class="line">*/</span><br><span class="line"></span><br><span class="line">    //获取所有的cells，并点击第一个cell。（如果一个页面有多个tableView，该方法可能导致获取的cell不是你想要的，可以通过方法二获取cell上面的label实现点击（label.text需要保证唯一））。</span><br><span class="line">     // 获取cell类的 query ，然后通过下标获取 element</span><br><span class="line">    XCUIElement *cell = [app.tables.cells elementBoundByIndex:0];</span><br><span class="line">    // 通过获取cell上的statiText类的 query，然后通过具体text获取 elment</span><br><span class="line">    XCUIElement *label = app.tables.cells.staticTexts[@&quot;我是element&quot;];  //他会去cell上查找text为@&quot;我是element&quot;的label，然后点击label达到点击cell的效果</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">/** </span><br><span class="line">滑动到指定位置</span><br><span class="line">*/</span><br><span class="line">     //滑动到指定位置，通过 XCUIElement 的 -pressForDuration:thenDragToElement:拖动到 @&quot;picker element&quot; 元素</span><br><span class="line">     XCUIElement *bottom = app.pickerWheels[@&quot;picker element&quot;];</span><br><span class="line">     [pickerWheel pressForDuration:0.5 thenDragToElement:bottom];</span><br><span class="line">     </span><br><span class="line">    </span><br><span class="line">    //下拉刷新，通过设置的偏移坐标，滑动到对应位置。</span><br><span class="line">     XCUIElement *refreshCell = app.tables.cells.staticTexts[@&quot;top&quot;];</span><br><span class="line">     XCUICoordinate *start = [refreshCell coordinateWithNormalizedOffset:CGVectorMake(0, 0)];</span><br><span class="line">     XCUICoordinate *end = [refreshCell coordinateWithNormalizedOffset:CGVectorMake(0, 6)];</span><br><span class="line">     [start pressForDuration:0.5 thenDragToCoordinate:end];</span><br></pre></td></tr></table></figure>
+<p>以上就是我在开发中遇到的一些坑，在遇到这些坑的时候，一脸懵逼，也在网上找了很久，就是没有找到解决方法，这些坑基本都是在毫无办法的时候，然后不小心点击到某个<code>元素</code>，获取在某种不同的数据情况下想到的原因。希望可以帮到大家。</p>
+<p><div id="container"></div></p>
+<p><link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css"></p>
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script>
+var gitment = new Gitment({
+  id: 'fourthArticle', // 可选。默认为 location.href
+  owner: 'yinxing29',
+  repo: 'UnitTestAndUITest',
+  oauth: {
+    client_id: '3d0471920900c002ea9e',
+    client_secret: 'c1ca98a130c157a8261e3db938deb692523d1eb2',
+  },
+})
+gitment.render('container')
+</script>
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="http://yinxing29.github.io">yinxing29</a>
+            <p>原文链接: <a href="http://yinxing29.github.io/2018/05/14/iOS - Unit Test 和 UI Test/">http://yinxing29.github.io/2018/05/14/iOS - Unit Test 和 UI Test/</a>
+            <p>发表日期: <a href="http://yinxing29.github.io/2018/05/14/iOS - Unit Test 和 UI Test/">May 14th 2018, 7:39:25</a>
+            <p>版权声明: 未经同意，禁止转载</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/2018/05/14/iOS-自定义日历（日期选择）控件/" title= iOS 自定义日历（日期选择）控件 >
+                    <div class="nextTitle">iOS 自定义日历（日期选择）控件</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/2018/05/14/iOS指纹解锁和手势解锁/" title= iOS指纹解锁和手势解锁 >
+                    <div class="prevTitle">iOS指纹解锁和手势解锁</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    
+    <!--PC版-->
+
+    <!--PC版-->
+
+
+    
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:yinxing29@sina.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/yinxing29" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+            
+                <a href="https://www.facebook.com/profile.php?id=100012741854533" class="iconfont-archer facebook" target="_blank" title=facebook></a>
+            
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+        <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span>
+        </span>
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Unit-Test-和-UI-Test"><span class="toc-number">1.</span> <span class="toc-text">Unit Test 和 UI Test</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Unit-Test"><span class="toc-number">1.1.</span> <span class="toc-text">Unit Test</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#UI-Test"><span class="toc-number">1.2.</span> <span class="toc-text">UI Test</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XCUIApplication"><span class="toc-number">1.2.1.</span> <span class="toc-text">XCUIApplication</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XCUIElementQuery"><span class="toc-number">1.2.2.</span> <span class="toc-text">XCUIElementQuery</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XCUIElement"><span class="toc-number">1.2.3.</span> <span class="toc-text">XCUIElement</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#坑"><span class="toc-number">1.3.</span> <span class="toc-text">坑</span></a></li></ol></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-archive"> Total : 4 </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS指纹解锁和手势解锁/" >iOS指纹解锁和手势解锁</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS-自定义日历（日期选择）控件/" >iOS 自定义日历（日期选择）控件</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS-webView缓存，保证加载最新html/" >iOS webView缓存，保证加载最新html</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS - Unit Test 和 UI Test/" >iOS指纹解锁和手势解锁</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: '/',
+        author: 'yinxing29'
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+    
+    </body>
+</html>
+
+
