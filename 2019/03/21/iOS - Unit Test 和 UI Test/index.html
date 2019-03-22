@@ -233,7 +233,7 @@ height:50vh;
     <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(https://yx29.oss-cn-beijing.aliyuncs.com/hello_world.png?Expires=1553188163&OSSAccessKeyId=TMP.AQG5wv5gCBnz-PBM4L3r-UNuLW1fU3-VMDcrorPolQptXAktR7bL-yDL4oNCADAtAhReNBFoPgT0-60rvYQUWc7bBfGzwwIVAIwE-UBflC38ZW97O0kfkEI1EI1O&Signature=m4NpFisUjhtORrv8CbahOLBVhXU%3D)"></div>
+    <div class="site-intro-img" style="background-image: url(https://yx29.oss-cn-beijing.aliyuncs.com/hello_world.png)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
@@ -415,7 +415,7 @@ height:50vh;
 <p>   <strong>Unit Test</strong>是一个<strong>target</strong>，所以在<strong>Unit Test</strong>中导入类的时候，如果涉及到<strong>prefix header</strong>中的类或者通过<strong>cocoaPods</strong>导入的三方库的时候，需要在对应的<strong>target</strong>中需要设置<strong>prefix header path</strong>和在<strong>Podfile</strong>文件中添加对应的<strong>target</strong>。</p>
 </li>
 </ul>
-<h2 id="UI-Test"><a href="#UI-Test" class="headerlink" title="UI Test"></a>UI Test</h2><p><strong>UI自动化测试：</strong>通过计算机语言模拟用户操作。在<code>iOS 3.0</code>的时候，苹果引入了<code>UI Accessibility</code>，用来辅助身体不方便的人来使用app，与<code>VoiceOver</code>相互配合，用来阅读被<code>UI Accessibility</code>分类和标记的<code>UI</code>元素操作app。而<strong>UI Test</strong>就是基于<code>UI Accessibility</code>的，所以我们在写<strong>UI Test</strong>时，其实就是通过对应的API来<code>查询</code>到UI上面的<code>元素</code>，并模拟点击等事件。为了方便开发者编写测试代码，<code>xCode</code>有一个功能叫录屏，当你开始录制的时候，他会将你的一系列操作自动生成代码，但是要想后面正常跑起来，还需要自己去修改，所以还是需要你去了解<strong>UI Test</strong>相应的API。<br><img src="https://yx29.oss-cn-beijing.aliyuncs.com/UI_Test.jpg?Expires=1553185962&amp;OSSAccessKeyId=TMP.AQG5wv5gCBnz-PBM4L3r-UNuLW1fU3-VMDcrorPolQptXAktR7bL-yDL4oNCADAtAhReNBFoPgT0-60rvYQUWc7bBfGzwwIVAIwE-UBflC38ZW97O0kfkEI1EI1O&amp;Signature=GnN60tFi%2F0%2BiLpmVCFjgPq1SkzU%3D" alt="image"></p>
+<h2 id="UI-Test"><a href="#UI-Test" class="headerlink" title="UI Test"></a>UI Test</h2><p><strong>UI自动化测试：</strong>通过计算机语言模拟用户操作。在<code>iOS 3.0</code>的时候，苹果引入了<code>UI Accessibility</code>，用来辅助身体不方便的人来使用app，与<code>VoiceOver</code>相互配合，用来阅读被<code>UI Accessibility</code>分类和标记的<code>UI</code>元素操作app。而<strong>UI Test</strong>就是基于<code>UI Accessibility</code>的，所以我们在写<strong>UI Test</strong>时，其实就是通过对应的API来<code>查询</code>到UI上面的<code>元素</code>，并模拟点击等事件。为了方便开发者编写测试代码，<code>xCode</code>有一个功能叫录屏，当你开始录制的时候，他会将你的一系列操作自动生成代码，但是要想后面正常跑起来，还需要自己去修改，所以还是需要你去了解<strong>UI Test</strong>相应的API。<br><img src="https://yx29.oss-cn-beijing.aliyuncs.com/UI_Test.jpg" alt="image"></p>
 <p>在<strong>UI Test</strong>中我们使用到的类主要有<code>XCUIApplication</code>，<code>XCUIElementQuery</code>，<code>XCUIElement</code>。</p>
 <h3 id="XCUIApplication"><a href="#XCUIApplication" class="headerlink" title="XCUIApplication"></a>XCUIApplication</h3><ul>
 <li><p>继承自<strong>XCUElement</strong>，类似于<strong>AppDelegate</strong>，管理应用程序的生命周期，在写测试代码的时候，可以说最重要的一句代码就是<code>XCUIApplication *app = [[XCUIApplication alloc] init];</code>，后续获取界面的元素都需要通过<code>app</code>来获取。</p>
@@ -728,7 +728,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS-webView缓存，保证加载最新html/" >iOS webView缓存，保证加载最新html</a>
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS指纹解锁和手势解锁/" >iOS指纹解锁和手势解锁</a>
         </li>
     
     
@@ -738,7 +738,7 @@ top:50vh;
     
     
         <li class="archive-post-item">
-            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS指纹解锁和手势解锁/" >iOS指纹解锁和手势解锁</a>
+            <span class="archive-post-date">05/14</span><a class="archive-post-title" href= "/2018/05/14/iOS-webView缓存，保证加载最新html/" >iOS webView缓存，保证加载最新html</a>
         </li>
     
     </div>
